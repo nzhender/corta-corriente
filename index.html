@@ -98,7 +98,6 @@
   .view { display: none; flex-direction: column; gap: 20px; }
   .view.active { display: flex; }
 
-  /* Inputs */
   .input-group {
     display: flex;
     flex-direction: column;
@@ -156,7 +155,6 @@
   .hint.error { color: var(--danger); }
   .hint.ok { color: var(--success); }
 
-  /* Status */
   .vehicle-card {
     display: flex;
     align-items: center;
@@ -218,13 +216,6 @@
   .vehicle-info .state.active { color: var(--danger); font-weight: 600; }
   .vehicle-info .state.inactive { color: var(--success); font-weight: 600; }
 
-  .empty-vehicle {
-    color: var(--text-dim);
-    font-size: 14px;
-    text-align: center;
-    padding: 12px 0;
-  }
-
   .button-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -269,7 +260,6 @@
     width: 100%;
   }
 
-  /* Fleet list */
   .section-header {
     display: flex;
     justify-content: space-between;
@@ -350,7 +340,6 @@
     padding: 24px 0;
   }
 
-  /* Search/select */
   .search-wrapper { position: relative; }
 
   .suggestions {
@@ -382,10 +371,7 @@
   .suggestion:last-child { border-bottom: none; }
   .suggestion:hover { background: rgba(59, 130, 246, 0.1); }
 
-  .suggestion .alias {
-    font-weight: 600;
-    font-size: 14px;
-  }
+  .suggestion .alias { font-weight: 600; font-size: 14px; }
   .suggestion .plate {
     font-family: "SF Mono", Monaco, monospace;
     color: var(--text-dim);
@@ -393,7 +379,6 @@
     letter-spacing: 0.5px;
   }
 
-  /* History */
   .history-item {
     display: flex;
     align-items: center;
@@ -433,7 +418,6 @@
     font-family: "SF Mono", Monaco, monospace;
   }
 
-  /* Modal */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -488,19 +472,10 @@
     box-shadow: none;
   }
 
-  .btn-confirm-activate {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-  }
+  .btn-confirm-activate { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .btn-confirm-deactivate { background: linear-gradient(135deg, #10b981, #059669); }
+  .btn-confirm-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
-  .btn-confirm-deactivate {
-    background: linear-gradient(135deg, #10b981, #059669);
-  }
-
-  .btn-confirm-danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-  }
-
-  /* Form in modal */
   .modal-form {
     display: flex;
     flex-direction: column;
@@ -516,7 +491,6 @@
     font-weight: 600;
   }
 
-  /* Toast */
   .toast {
     position: fixed;
     bottom: 24px;
@@ -552,18 +526,12 @@
       <button class="tab" data-view="flota">Mi Flota</button>
     </div>
 
-    <!-- VIEW: OPERAR -->
     <div class="view active" id="view-operar">
       <div class="card">
         <div class="input-group">
           <label for="search">Buscar vehículo</label>
           <div class="search-wrapper">
-            <input
-              type="text"
-              id="search"
-              placeholder="Patente o alias..."
-              autocomplete="off"
-            />
+            <input type="text" id="search" placeholder="Patente o alias..." autocomplete="off" />
             <div class="suggestions" id="suggestions"></div>
           </div>
           <div class="hint" id="searchHint">Solo se pueden operar vehículos registrados en Mi Flota</div>
@@ -601,7 +569,6 @@
       </div>
     </div>
 
-    <!-- VIEW: FLOTA -->
     <div class="view" id="view-flota">
       <div class="card">
         <div class="section-header">
@@ -619,7 +586,6 @@
     </div>
   </div>
 
-  <!-- Modal: Confirm action -->
   <div class="modal-backdrop" id="modalAction">
     <div class="modal">
       <div class="modal-icon" id="actionIcon">⚠️</div>
@@ -633,7 +599,6 @@
     </div>
   </div>
 
-  <!-- Modal: Add/Edit vehicle -->
   <div class="modal-backdrop" id="modalVehicle">
     <div class="modal">
       <div class="modal-icon">🚗</div>
@@ -645,8 +610,8 @@
         </div>
         <div>
           <label for="vehiclePlate">Patente</label>
-          <input type="text" id="vehiclePlate" class="plate" placeholder="AA123BB" maxlength="7" style="margin-top:4px;" />
-          <div class="hint" id="vehiclePlateHint" style="margin-top:6px;">Formato: AA123BB o ABC123</div>
+          <input type="text" id="vehiclePlate" class="plate" placeholder="Ej: VRXT53 / AA123BB / ABC123" maxlength="8" style="margin-top:4px;" />
+          <div class="hint" id="vehiclePlateHint" style="margin-top:6px;">Acepta formatos AR, CL, UY, BR, PY y similares</div>
         </div>
       </div>
       <div class="modal-buttons">
@@ -656,7 +621,6 @@
     </div>
   </div>
 
-  <!-- Modal: Delete vehicle -->
   <div class="modal-backdrop" id="modalDelete">
     <div class="modal">
       <div class="modal-icon">🗑</div>
@@ -676,16 +640,34 @@
   const K_FLEET = 'cc_fleet_v2';
   const K_HISTORY = 'cc_history_v2';
 
-  const NEW_FORMAT = /^[A-Z]{2}\d{3}[A-Z]{2}$/;
-  const OLD_FORMAT = /^[A-Z]{3}\d{3}$/;
-  const isValidPlate = (p) => NEW_FORMAT.test(p) || OLD_FORMAT.test(p);
+  // Validador permisivo: acepta formatos comunes de LATAM y, como fallback,
+  // cualquier combinación 5-8 alfanumérica con al menos una letra y un dígito.
+  // - AR Mercosur auto:  AB123CD
+  // - AR Mercosur moto:  A123BCD
+  // - AR antigua auto:   ABC123
+  // - AR antigua moto:   123ABC
+  // - Chile:             VRXT53 (4 letras + 2 dígitos)
+  // - Uruguay/BR antigua: ABC1234
+  // - Brasil Mercosur:   ABC1D23
+  // - Paraguay:          AABB123 (4 letras + 3 dígitos)
+  const PLATE_FORMATS = [
+    /^[A-Z]{2}\d{3}[A-Z]{2}$/,
+    /^[A-Z]\d{3}[A-Z]{3}$/,
+    /^[A-Z]{3}\d{3}$/,
+    /^\d{3}[A-Z]{3}$/,
+    /^[A-Z]{4}\d{2}$/,
+    /^[A-Z]{3}\d{4}$/,
+    /^[A-Z]{3}\d[A-Z]\d{2}$/,
+    /^[A-Z]{4}\d{3}$/,
+  ];
+  const GENERIC = /^(?=.*[A-Z])(?=.*\d)[A-Z0-9]{5,8}$/;
+  const isValidPlate = (p) => PLATE_FORMATS.some(r => r.test(p)) || GENERIC.test(p);
 
-  // -------- Storage --------
   const load = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } };
   const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-  let fleet = load(K_FLEET, []);   // [{plate, alias, active, updated}]
-  let history = load(K_HISTORY, []); // [{plate, alias, action, ts}]
+  let fleet = load(K_FLEET, []);
+  let history = load(K_HISTORY, []);
   let selectedPlate = null;
   let editingPlate = null;
   let pendingDeletePlate = null;
@@ -694,7 +676,6 @@
   const saveFleet = () => save(K_FLEET, fleet);
   const saveHistory = () => save(K_HISTORY, history);
 
-  // -------- Tabs --------
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -704,7 +685,6 @@
     });
   });
 
-  // -------- Helpers --------
   const formatTime = (ts) => {
     const d = new Date(ts);
     const today = new Date();
@@ -722,8 +702,8 @@
   };
 
   const findVehicle = (plate) => fleet.find(v => v.plate === plate);
+  const escapeHtml = (s) => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-  // -------- Render: Fleet --------
   const renderFleet = () => {
     document.getElementById('fleetCount').textContent = fleet.length;
     const list = document.getElementById('fleetList');
@@ -745,9 +725,6 @@
     `).join('');
   };
 
-  const escapeHtml = (s) => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-  // -------- Render: History --------
   const renderHistory = () => {
     const list = document.getElementById('historyList');
     if (history.length === 0) {
@@ -765,10 +742,8 @@
     `).join('');
   };
 
-  // -------- Operar view --------
   const searchInput = document.getElementById('search');
   const suggestions = document.getElementById('suggestions');
-  const searchHint = document.getElementById('searchHint');
   const selectedAlias = document.getElementById('selectedAlias');
   const selectedPlateEl = document.getElementById('selectedPlate');
   const selectedState = document.getElementById('selectedState');
@@ -837,26 +812,16 @@
     btnDeactivate.disabled = true;
   };
 
-  searchInput.addEventListener('input', () => {
-    selectedPlate = null;
-    clearSelection();
-    updateSuggestions();
-  });
-
+  searchInput.addEventListener('input', () => { selectedPlate = null; clearSelection(); updateSuggestions(); });
   searchInput.addEventListener('focus', updateSuggestions);
-
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-wrapper')) {
-      suggestions.classList.remove('show');
-    }
+    if (!e.target.closest('.search-wrapper')) suggestions.classList.remove('show');
   });
-
   suggestions.addEventListener('click', (e) => {
     const item = e.target.closest('.suggestion');
     if (item && item.dataset.plate) selectVehicle(item.dataset.plate);
   });
 
-  // -------- Activate / Deactivate --------
   const openActionModal = (action) => {
     if (!selectedPlate) return;
     const v = findVehicle(selectedPlate);
@@ -894,12 +859,7 @@
     v.active = pendingAction.action === 'activate';
     v.updated = Date.now();
     saveFleet();
-    history.unshift({
-      plate: v.plate,
-      alias: v.alias,
-      action: pendingAction.action,
-      ts: v.updated
-    });
+    history.unshift({ plate: v.plate, alias: v.alias, action: pendingAction.action, ts: v.updated });
     history = history.slice(0, 50);
     saveHistory();
     closeModal('modalAction');
@@ -914,7 +874,6 @@
     pendingAction = null;
   });
 
-  // -------- Fleet management --------
   const aliasInput = document.getElementById('vehicleAlias');
   const plateInput = document.getElementById('vehiclePlate');
   const plateHint = document.getElementById('vehiclePlateHint');
@@ -924,13 +883,13 @@
     const p = e.target.value;
     plateInput.classList.remove('invalid');
     if (p.length === 0) {
-      plateHint.textContent = 'Formato: AA123BB o ABC123';
+      plateHint.textContent = 'Acepta formatos AR, CL, UY, BR, PY y similares';
       plateHint.className = 'hint';
     } else if (isValidPlate(p)) {
       plateHint.textContent = 'Patente válida';
       plateHint.className = 'hint ok';
     } else {
-      plateHint.textContent = 'Formato inválido';
+      plateHint.textContent = 'Debe tener entre 5 y 8 caracteres, con letras y números';
       plateHint.className = 'hint error';
       plateInput.classList.add('invalid');
     }
@@ -942,7 +901,7 @@
     aliasInput.value = '';
     plateInput.value = '';
     plateInput.disabled = false;
-    plateHint.textContent = 'Formato: AA123BB o ABC123';
+    plateHint.textContent = 'Acepta formatos AR, CL, UY, BR, PY y similares';
     plateHint.className = 'hint';
     openModal('modalVehicle');
     setTimeout(() => aliasInput.focus(), 100);
@@ -959,7 +918,7 @@
       document.getElementById('vehicleModalTitle').textContent = 'Editar vehículo';
       aliasInput.value = v.alias;
       plateInput.value = v.plate;
-      plateInput.disabled = true; // No permitir cambiar la patente (es la PK)
+      plateInput.disabled = true;
       plateHint.textContent = 'La patente no se puede modificar';
       plateHint.className = 'hint';
       openModal('modalVehicle');
@@ -977,26 +936,15 @@
   document.getElementById('btnSaveVehicle').addEventListener('click', () => {
     const alias = aliasInput.value.trim();
     const plate = plateInput.value.trim().toUpperCase();
-    if (!alias) {
-      showToast('Ingresá un alias', 'error');
-      aliasInput.focus();
-      return;
-    }
-    if (!isValidPlate(plate)) {
-      showToast('Patente inválida', 'error');
-      plateInput.focus();
-      return;
-    }
+    if (!alias) { showToast('Ingresá un alias', 'error'); aliasInput.focus(); return; }
+    if (!isValidPlate(plate)) { showToast('Patente inválida', 'error'); plateInput.focus(); return; }
     if (editingPlate) {
       const v = findVehicle(editingPlate);
       if (v) v.alias = alias;
       saveFleet();
       showToast('Vehículo actualizado');
     } else {
-      if (findVehicle(plate)) {
-        showToast('Esa patente ya está cargada', 'error');
-        return;
-      }
+      if (findVehicle(plate)) { showToast('Esa patente ya está cargada', 'error'); return; }
       fleet.push({ plate, alias, active: false, updated: null });
       saveFleet();
       showToast('Vehículo agregado');
@@ -1017,7 +965,6 @@
     pendingDeletePlate = null;
   });
 
-  // -------- Modal helpers --------
   const openModal = (id) => document.getElementById(id).classList.add('show');
   const closeModal = (id) => document.getElementById(id).classList.remove('show');
 
@@ -1026,9 +973,7 @@
   });
 
   document.querySelectorAll('.modal-backdrop').forEach(m => {
-    m.addEventListener('click', (e) => {
-      if (e.target === m) m.classList.remove('show');
-    });
+    m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('show'); });
   });
 
   document.addEventListener('keydown', (e) => {
@@ -1037,18 +982,13 @@
     }
   });
 
-  // -------- History clear --------
   document.getElementById('clearHistoryBtn').addEventListener('click', () => {
     if (history.length === 0) return;
     if (confirm('¿Borrar todo el historial?')) {
-      history = [];
-      saveHistory();
-      renderHistory();
-      showToast('Historial borrado');
+      history = []; saveHistory(); renderHistory(); showToast('Historial borrado');
     }
   });
 
-  // -------- Init --------
   renderFleet();
   renderHistory();
   clearSelection();
