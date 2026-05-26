@@ -32,14 +32,62 @@
     align-items: flex-start;
   }
 
-  .app { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+  /* ============ LOGIN VIEW ============ */
+  .login-wrapper {
+    width: 100%; max-width: 400px;
+    display: none; flex-direction: column;
+    align-items: center; gap: 24px;
+    margin-top: 8vh;
+  }
+  .login-wrapper.show { display: flex; }
 
-  .header { text-align: center; padding: 8px 0 4px; }
+  .login-header { text-align: center; }
+  .login-header h1 {
+    font-size: 26px; font-weight: 700; letter-spacing: -0.5px;
+    user-select: none; -webkit-user-select: none;
+  }
+  .login-header p { color: var(--text-dim); font-size: 14px; margin-top: 8px; }
+
+  .login-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 28px; box-shadow: var(--shadow);
+    width: 100%;
+  }
+
+  .login-card .input-group + .input-group { margin-top: 16px; }
+
+  .login-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5; font-size: 13px;
+    padding: 10px 14px; border-radius: 10px;
+    margin-top: 14px; text-align: center;
+    display: none;
+  }
+  .login-error.show { display: block; }
+
+  /* ============ APP VIEW ============ */
+  .app { width: 100%; max-width: 480px; display: none; flex-direction: column; gap: 20px; }
+  .app.show { display: flex; }
+
+  .header { text-align: center; padding: 8px 0 4px; position: relative; }
   .header h1 {
     font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
     user-select: none; -webkit-user-select: none;
   }
   .header p { color: var(--text-dim); font-size: 13px; margin-top: 4px; }
+  .header .user-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+    font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 12px;
+    margin-top: 8px;
+    font-family: "SF Mono", Monaco, monospace;
+  }
 
   .tabs {
     display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
@@ -54,7 +102,6 @@
     font-size: 13px; font-weight: 600; border-radius: 10px;
     cursor: pointer; transition: all 0.2s; font-family: inherit;
   }
-
   .tab.active { background: rgba(59, 130, 246, 0.2); color: var(--text); }
   .tab.hidden { display: none; }
 
@@ -69,13 +116,12 @@
   .view.active { display: flex; }
 
   .input-group { display: flex; flex-direction: column; gap: 8px; }
-
   .input-group label {
     font-size: 13px; color: var(--text-dim); font-weight: 500;
     text-transform: uppercase; letter-spacing: 0.5px;
   }
 
-  input[type="text"], input[type="password"], textarea {
+  input[type="text"], input[type="password"], input[type="email"], textarea {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--card-border);
     border-radius: 12px; padding: 14px 16px;
@@ -89,7 +135,7 @@
     text-align: center; font-family: "SF Mono", Monaco, monospace; font-size: 18px;
   }
 
-  input[type="text"].mono, textarea.mono, input[type="password"].mono {
+  input.mono, textarea.mono {
     font-family: "SF Mono", Monaco, monospace; letter-spacing: 0.3px; font-size: 13px;
   }
 
@@ -120,13 +166,11 @@
     background: var(--text-dim); flex-shrink: 0;
     box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.15);
   }
-
   .status-dot.active {
     background: var(--danger);
     box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
     animation: pulse 2s infinite;
   }
-
   .status-dot.inactive {
     background: var(--success);
     box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
@@ -162,7 +206,6 @@
     display: flex; flex-direction: column; align-items: center; gap: 6px;
     font-family: inherit;
   }
-
   button:active:not(:disabled) { transform: scale(0.97); }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
   button .icon { font-size: 22px; }
@@ -180,6 +223,14 @@
     box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
     flex-direction: row; width: 100%;
   }
+  .btn-danger-outline {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: none;
+    flex-direction: row; width: 100%;
+  }
+  .btn-danger-outline:hover { background: rgba(239, 68, 68, 0.15); }
 
   .btn-loading::after {
     content: ''; width: 16px; height: 16px;
@@ -214,7 +265,6 @@
     background: rgba(0, 0, 0, 0.2); border-radius: 10px;
     border: 1px solid var(--card-border);
   }
-
   .fleet-item .info { flex: 1; min-width: 0; }
   .fleet-item .info .alias {
     font-weight: 600; font-size: 14px;
@@ -269,7 +319,6 @@
     background: rgba(0, 0, 0, 0.2); border-radius: 10px;
     border: 1px solid var(--card-border);
   }
-
   .history-icon {
     width: 32px; height: 32px; border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
@@ -390,17 +439,46 @@
     font-size: 12px; color: #fca5a5; line-height: 1.5;
   }
 
-  .config-hint {
-    font-size: 11px; color: var(--text-dim);
-    text-align: center; opacity: 0.5; margin-top: -8px;
+  .info-row {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 12px 14px;
+    font-size: 12px; color: var(--text-dim);
+    line-height: 1.5;
   }
+  .info-row b { color: var(--text); }
 </style>
 </head>
 <body>
-  <div class="app">
+
+  <!-- LOGIN VIEW -->
+  <div class="login-wrapper" id="loginView">
+    <div class="login-header">
+      <h1 id="loginTitle">Control de Corta Corriente</h1>
+      <p>Iniciá sesión con tu cuenta de Copiloto</p>
+    </div>
+    <div class="login-card">
+      <div class="input-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email" autocapitalize="none" />
+      </div>
+      <div class="input-group">
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <div class="login-error" id="loginError"></div>
+      <button class="btn-primary" id="btnLogin" style="margin-top:20px; padding:16px;">
+        <span>Ingresar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- APP VIEW -->
+  <div class="app" id="appView">
     <div class="header">
       <h1 id="appTitle">Control de Corta Corriente</h1>
       <p>Gestión de flota</p>
+      <div class="user-pill" id="userPill"></div>
     </div>
 
     <div class="tabs" id="tabs">
@@ -471,7 +549,7 @@
       </div>
     </div>
 
-    <!-- CONFIGURACIÓN (oculta, solo accesible con 5 toques en el título) -->
+    <!-- CONFIG (oculto) -->
     <div class="view" id="view-config">
       <div class="card">
         <div class="section-header">
@@ -479,27 +557,28 @@
           <button class="icon-btn" id="btnHideConfig" title="Ocultar">✕</button>
         </div>
 
-        <div class="danger-banner" style="margin-bottom:16px;">
-          ⚠️ Pantalla oculta. Acceso solo para administrador. El token queda guardado en el navegador del dispositivo (localStorage).
+        <div class="info-row" style="margin-bottom:16px;">
+          Sesión activa: <b id="cfgSessionEmail">—</b><br>
+          Última renovación: <b id="cfgLastRenew">—</b>
         </div>
 
         <div class="input-group">
-          <label for="cfgBaseUrl">Base URL</label>
-          <input type="text" id="cfgBaseUrl" class="mono" placeholder="https://api.copiloto.ai" />
+          <label for="cfgApiUrl">API URL (comandos)</label>
+          <input type="text" id="cfgApiUrl" class="mono" placeholder="https://api.copiloto.ai" />
         </div>
 
         <div class="input-group" style="margin-top:14px;">
-          <label for="cfgToken">Token Bearer</label>
-          <input type="password" id="cfgToken" class="mono" placeholder="Pegá tu token de Copiloto" autocomplete="off" />
+          <label for="cfgAuthUrl">Auth URL (login/renew)</label>
+          <input type="text" id="cfgAuthUrl" class="mono" placeholder="https://accounts.copiloto.ai" />
         </div>
 
         <div class="input-group" style="margin-top:14px;">
-          <label for="cfgCmdOn">Comando ACTIVAR (cortar corriente)</label>
+          <label for="cfgCmdOn">Comando ACTIVAR</label>
           <textarea id="cfgCmdOn" class="mono" rows="3"></textarea>
         </div>
 
         <div class="input-group" style="margin-top:14px;">
-          <label for="cfgCmdOff">Comando DESACTIVAR (restaurar)</label>
+          <label for="cfgCmdOff">Comando DESACTIVAR</label>
           <textarea id="cfgCmdOff" class="mono" rows="3"></textarea>
         </div>
 
@@ -515,8 +594,8 @@
           <span>Guardar configuración</span>
         </button>
 
-        <button class="btn-primary" id="btnTestConnection" style="margin-top:10px; padding:12px; background: rgba(255,255,255,0.08); box-shadow:none;">
-          <span>Probar conexión</span>
+        <button class="btn-danger-outline" id="btnLogout" style="margin-top:10px; padding:14px;">
+          <span>Cerrar sesión</span>
         </button>
       </div>
     </div>
@@ -582,18 +661,22 @@
 
 <script>
   // ============ STORAGE KEYS ============
-  const K_FLEET = 'cc_fleet_v3';
-  const K_HISTORY = 'cc_history_v3';
-  const K_CONFIG = 'cc_config_v1';
+  const K_FLEET    = 'cc_fleet_v3';
+  const K_HISTORY  = 'cc_history_v3';
+  const K_CONFIG   = 'cc_config_v2';
+  const K_AUTH     = 'cc_auth_v1';
+  const K_LASTMAIL = 'cc_last_email';
 
   // ============ DEFAULTS ============
   const DEFAULT_CONFIG = {
-    baseUrl: 'https://api.copiloto.ai',
-    token: '',
-    cmdOn:  'AT+GTDOS=gv58lau,0,3,1,1,0,0,0,,2,0,0,0,0,,3,0,0,0,0,,7,0,5,,,,FFFF$',
-    cmdOff: 'AT+GTDOS=gv58lau,0,3,1,0,0,0,0,,2,0,0,0,0,,3,0,0,0,0,,7,0,5,,,,FFFF$',
-    simulate: true
+    apiUrl:  'https://api.copiloto.ai',
+    authUrl: 'https://accounts.copiloto.ai',
+    cmdOn:   'AT+GTDOS=gv58lau,0,3,1,1,0,0,0,,2,0,0,0,0,,3,0,0,0,0,,7,0,5,,,,FFFF$',
+    cmdOff:  'AT+GTDOS=gv58lau,0,3,1,0,0,0,0,,2,0,0,0,0,,3,0,0,0,0,,7,0,5,,,,FFFF$',
+    simulate: false
   };
+
+  const RENEW_INTERVAL_MS = 25 * 60 * 1000; // 25 minutos
 
   // ============ VALIDATIONS ============
   const PLATE_FORMATS = [
@@ -604,30 +687,35 @@
   ];
   const GENERIC = /^(?=.*[A-Z])(?=.*\d)[A-Z0-9]{5,8}$/;
   const isValidPlate = (p) => PLATE_FORMATS.some(r => r.test(p)) || GENERIC.test(p);
-  const isValidImei = (i) => /^\d{14,17}$/.test(i);
+  const isValidImei  = (i) => /^\d{14,17}$/.test(i);
 
   // ============ STORAGE ============
   const load = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } };
   const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+  const remove = (k) => localStorage.removeItem(k);
 
-  let fleet = load(K_FLEET, []);
+  let fleet   = load(K_FLEET, []);
   let history = load(K_HISTORY, []);
-  let config = Object.assign({}, DEFAULT_CONFIG, load(K_CONFIG, {}));
+  let config  = Object.assign({}, DEFAULT_CONFIG, load(K_CONFIG, {}));
+  let auth    = load(K_AUTH, null); // { token, email, userId, renewedAt }
   let selectedPlate = null;
   let editingPlate = null;
   let pendingDeletePlate = null;
   let pendingAction = null;
+  let renewTimer = null;
 
-  const saveFleet = () => save(K_FLEET, fleet);
+  const saveFleet   = () => save(K_FLEET, fleet);
   const saveHistory = () => save(K_HISTORY, history);
-  const saveConfig = () => save(K_CONFIG, config);
+  const saveConfig  = () => save(K_CONFIG, config);
+  const saveAuth    = () => save(K_AUTH, auth);
 
   // ============ HELPERS ============
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const findVehicle = (plate) => fleet.find(v => v.plate === plate);
-  const findByImei = (imei) => fleet.find(v => v.imei === imei);
+  const findByImei  = (imei) => fleet.find(v => v.imei === imei);
 
   const formatTime = (ts) => {
+    if (!ts) return '—';
     const d = new Date(ts);
     const today = new Date();
     const sameDay = d.toDateString() === today.toDateString();
@@ -643,74 +731,131 @@
     setTimeout(() => t.classList.remove('show'), duration);
   };
 
-  // ============ HIDDEN CONFIG ACCESS (5 taps on title) ============
-  const appTitle = document.getElementById('appTitle');
-  const tabConfig = document.getElementById('tabConfig');
-  const tabs = document.getElementById('tabs');
-  let tapCount = 0;
-  let tapTimer = null;
-
-  const showConfigTab = () => {
-    tabConfig.classList.remove('hidden');
-    tabs.classList.add('with-config');
-    showToast('Modo administrador desbloqueado', 'warn', 2000);
-  };
-
-  const hideConfigTab = () => {
-    // Si estás parado en config, volvé a operar
-    if (document.querySelector('.tab[data-view="config"]').classList.contains('active')) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.querySelector('.tab[data-view="operar"]').classList.add('active');
-      document.getElementById('view-operar').classList.add('active');
+  // ============ AUTH ============
+  async function signIn(email, password) {
+    try {
+      const res = await fetch(config.authUrl.replace(/\/$/,'') + '/v1/sign-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const text = await res.text();
+      let data = null; try { data = JSON.parse(text); } catch {}
+      if (!res.ok) {
+        const msg = data?.error || data?.message || `HTTP ${res.status}`;
+        return { ok: false, error: msg };
+      }
+      const d = data?.data || data;
+      const token = d?.token;
+      if (!token) return { ok: false, error: 'Respuesta sin token' };
+      auth = {
+        token,
+        email: d?.email || email,
+        userId: d?.user_id || null,
+        renewedAt: Date.now()
+      };
+      saveAuth();
+      save(K_LASTMAIL, email);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: 'Error de red: ' + e.message };
     }
-    tabConfig.classList.add('hidden');
-    tabs.classList.remove('with-config');
-    showToast('Configuración oculta', 'success', 1500);
-  };
+  }
 
-  appTitle.addEventListener('click', () => {
-    tapCount++;
-    clearTimeout(tapTimer);
-    tapTimer = setTimeout(() => { tapCount = 0; }, 1500);
-    if (tapCount >= 5) {
-      tapCount = 0;
-      clearTimeout(tapTimer);
-      if (tabConfig.classList.contains('hidden')) showConfigTab();
+  async function renewToken() {
+    if (!auth?.token) return { ok: false, error: 'Sin token' };
+    try {
+      const res = await fetch(config.authUrl.replace(/\/$/,'') + '/v1/tokens/renew', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ token: auth.token })
+      });
+      if (!res.ok) return { ok: false, status: res.status };
+      const data = await res.json();
+      const newToken = data?.data?.token || data?.token;
+      if (!newToken) return { ok: false, error: 'Respuesta sin token' };
+      auth.token = newToken;
+      auth.renewedAt = Date.now();
+      saveAuth();
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e.message };
     }
-  });
+  }
 
-  document.getElementById('btnHideConfig').addEventListener('click', hideConfigTab);
+  function startAutoRenew() {
+    clearInterval(renewTimer);
+    renewTimer = setInterval(async () => {
+      const r = await renewToken();
+      if (!r.ok && (r.status === 401 || r.status === 403)) {
+        showToast('Tu sesión expiró', 'warn', 3000);
+        doLogout();
+      }
+      updateConfigInfo();
+    }, RENEW_INTERVAL_MS);
+  }
 
-  // ============ TABS ============
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById('view-' + tab.dataset.view).classList.add('active');
-    });
-  });
+  function doLogout() {
+    clearInterval(renewTimer);
+    auth = null;
+    remove(K_AUTH);
+    showLoginView();
+  }
 
-  // ============ API CALL ============
-  async function sendCommand(imei, command) {
+  function showLoginView() {
+    document.getElementById('appView').classList.remove('show');
+    document.getElementById('loginView').classList.add('show');
+    const lastEmail = load(K_LASTMAIL, '');
+    if (lastEmail) document.getElementById('loginEmail').value = lastEmail;
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginError').classList.remove('show');
+    setTimeout(() => {
+      if (lastEmail) document.getElementById('loginPassword').focus();
+      else document.getElementById('loginEmail').focus();
+    }, 100);
+  }
+
+  function showAppView() {
+    document.getElementById('loginView').classList.remove('show');
+    document.getElementById('appView').classList.add('show');
+    document.getElementById('userPill').textContent = '👤 ' + (auth?.email || '');
+    updateConfigInfo();
+    renderFleet();
+    renderHistory();
+    clearSelection();
+  }
+
+  function updateConfigInfo() {
+    document.getElementById('cfgSessionEmail').textContent = auth?.email || '—';
+    document.getElementById('cfgLastRenew').textContent = formatTime(auth?.renewedAt);
+  }
+
+  // ============ API: SEND COMMAND ============
+  async function sendCommand(imei, command, isRetry = false) {
     if (config.simulate) {
       await new Promise(r => setTimeout(r, 400));
       return { ok: true, simulated: true };
     }
-    if (!config.token) return { ok: false, error: 'Falta el token en Configuración' };
-    if (!config.baseUrl) return { ok: false, error: 'Falta la URL base en Configuración' };
+    if (!auth?.token) return { ok: false, error: 'No estás autenticado' };
 
-    const url = `${config.baseUrl.replace(/\/$/, '')}/command/${encodeURIComponent(imei)}`;
+    const url = `${config.apiUrl.replace(/\/$/, '')}/command/${encodeURIComponent(imei)}`;
     try {
       const res = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${config.token}`
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${auth.token}`
         },
         body: JSON.stringify({ command })
       });
+      if (res.status === 401 && !isRetry) {
+        // Intentar renovar y reintentar una sola vez
+        const r = await renewToken();
+        if (r.ok) return sendCommand(imei, command, true);
+        doLogout();
+        return { ok: false, error: 'Sesión expirada' };
+      }
       if (!res.ok) {
         let detail = '';
         try { detail = (await res.text()).slice(0, 200); } catch {}
@@ -723,6 +868,95 @@
       return { ok: false, error: 'Error de red o CORS: ' + e.message };
     }
   }
+
+  // ============ HIDDEN CONFIG ACCESS ============
+  const tabConfig = document.getElementById('tabConfig');
+  const tabs = document.getElementById('tabs');
+  let tapCount = 0; let tapTimer = null;
+
+  function setupTitleTaps(elementId) {
+    document.getElementById(elementId).addEventListener('click', () => {
+      tapCount++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { tapCount = 0; }, 1500);
+      if (tapCount >= 5) {
+        tapCount = 0; clearTimeout(tapTimer);
+        if (auth?.token && tabConfig.classList.contains('hidden')) {
+          tabConfig.classList.remove('hidden');
+          tabs.classList.add('with-config');
+          showToast('Modo administrador desbloqueado', 'warn', 2000);
+        }
+      }
+    });
+  }
+  setupTitleTaps('appTitle');
+  setupTitleTaps('loginTitle');
+
+  document.getElementById('btnHideConfig').addEventListener('click', () => {
+    if (document.querySelector('.tab[data-view="config"]').classList.contains('active')) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelector('.tab[data-view="operar"]').classList.add('active');
+      document.getElementById('view-operar').classList.add('active');
+    }
+    tabConfig.classList.add('hidden');
+    tabs.classList.remove('with-config');
+    showToast('Configuración oculta', 'success', 1500);
+  });
+
+  // ============ TABS ============
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('view-' + tab.dataset.view).classList.add('active');
+    });
+  });
+
+  // ============ LOGIN UI ============
+  const btnLogin = document.getElementById('btnLogin');
+  const loginEmail = document.getElementById('loginEmail');
+  const loginPassword = document.getElementById('loginPassword');
+  const loginError = document.getElementById('loginError');
+
+  async function doLogin() {
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value;
+    loginError.classList.remove('show');
+    if (!email || !password) {
+      loginError.textContent = 'Ingresá email y contraseña';
+      loginError.classList.add('show');
+      return;
+    }
+    const original = btnLogin.innerHTML;
+    btnLogin.disabled = true;
+    btnLogin.classList.add('btn-loading');
+    btnLogin.innerHTML = '<span>Ingresando...</span>';
+    const result = await signIn(email, password);
+    btnLogin.disabled = false;
+    btnLogin.classList.remove('btn-loading');
+    btnLogin.innerHTML = original;
+    if (result.ok) {
+      showAppView();
+      startAutoRenew();
+      showToast('Bienvenido, ' + auth.email, 'success');
+    } else {
+      loginError.textContent = result.error;
+      loginError.classList.add('show');
+    }
+  }
+
+  btnLogin.addEventListener('click', doLogin);
+  loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
+  loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginPassword.focus(); });
+
+  document.getElementById('btnLogout').addEventListener('click', () => {
+    if (confirm('¿Cerrar sesión? Vas a tener que ingresar el email y contraseña otra vez.')) {
+      doLogout();
+      showToast('Sesión cerrada');
+    }
+  });
 
   // ============ RENDER FLEET ============
   const renderFleet = () => {
@@ -774,7 +1008,7 @@
     }).join('');
   };
 
-  // ============ OPERAR VIEW ============
+  // ============ OPERAR ============
   const searchInput = document.getElementById('search');
   const suggestions = document.getElementById('suggestions');
   const selectedAlias = document.getElementById('selectedAlias');
@@ -843,6 +1077,7 @@
     statusDot.classList.remove('active', 'inactive');
     btnActivate.disabled = true;
     btnDeactivate.disabled = true;
+    searchInput.value = '';
   };
 
   searchInput.addEventListener('input', () => { selectedPlate = null; clearSelection(); updateSuggestions(); });
@@ -1067,15 +1302,15 @@
   });
 
   // ============ CONFIG VIEW ============
-  const cfgBaseUrl = document.getElementById('cfgBaseUrl');
-  const cfgToken = document.getElementById('cfgToken');
+  const cfgApiUrl = document.getElementById('cfgApiUrl');
+  const cfgAuthUrl = document.getElementById('cfgAuthUrl');
   const cfgCmdOn = document.getElementById('cfgCmdOn');
   const cfgCmdOff = document.getElementById('cfgCmdOff');
   const cfgSimSwitch = document.getElementById('cfgSimSwitch');
 
   const loadConfigToUI = () => {
-    cfgBaseUrl.value = config.baseUrl;
-    cfgToken.value = config.token;
+    cfgApiUrl.value = config.apiUrl;
+    cfgAuthUrl.value = config.authUrl;
     cfgCmdOn.value = config.cmdOn;
     cfgCmdOff.value = config.cmdOff;
     cfgSimSwitch.classList.toggle('on', config.simulate);
@@ -1086,38 +1321,13 @@
   });
 
   document.getElementById('btnSaveConfig').addEventListener('click', () => {
-    config.baseUrl = cfgBaseUrl.value.trim();
-    config.token = cfgToken.value.trim();
+    config.apiUrl = cfgApiUrl.value.trim();
+    config.authUrl = cfgAuthUrl.value.trim();
     config.cmdOn = cfgCmdOn.value.trim();
     config.cmdOff = cfgCmdOff.value.trim();
     config.simulate = cfgSimSwitch.classList.contains('on');
     saveConfig();
     showToast('Configuración guardada');
-  });
-
-  document.getElementById('btnTestConnection').addEventListener('click', async () => {
-    const baseUrl = cfgBaseUrl.value.trim();
-    const token = cfgToken.value.trim();
-    if (!baseUrl || !token) { showToast('Falta URL o token', 'error'); return; }
-    showToast('Probando conexión...', 'warn', 1500);
-    try {
-      const res = await fetch(baseUrl.replace(/\/$/,'') + '/command/000000000000000', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ command: 'TEST' })
-      });
-      if (res.status === 401 || res.status === 403) {
-        showToast('Token inválido (HTTP ' + res.status + ')', 'error', 4000);
-      } else if (res.status === 404) {
-        showToast('Conexión OK (404 esperado por IMEI ficticio)', 'success', 4000);
-      } else if (res.ok) {
-        showToast('Conexión OK (HTTP ' + res.status + ')', 'success', 4000);
-      } else {
-        showToast('Respuesta HTTP ' + res.status, 'warn', 4000);
-      }
-    } catch (e) {
-      showToast('Error de red o CORS: ' + e.message, 'error', 5000);
-    }
   });
 
   // ============ MODAL HELPERS ============
@@ -1146,10 +1356,23 @@
   });
 
   // ============ INIT ============
-  loadConfigToUI();
-  renderFleet();
-  renderHistory();
-  clearSelection();
+  (async function init() {
+    loadConfigToUI();
+    if (auth?.token) {
+      // Intentar renovar al iniciar
+      const r = await renewToken();
+      if (r.ok) {
+        showAppView();
+        startAutoRenew();
+      } else {
+        auth = null;
+        remove(K_AUTH);
+        showLoginView();
+      }
+    } else {
+      showLoginView();
+    }
+  })();
 </script>
 </body>
 </html>
