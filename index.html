@@ -35,14 +35,19 @@
   .app { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
 
   .header { text-align: center; padding: 8px 0 4px; }
-  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .header h1 {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+    user-select: none; -webkit-user-select: none;
+  }
   .header p { color: var(--text-dim); font-size: 13px; margin-top: 4px; }
 
   .tabs {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
     background: var(--card-bg); border: 1px solid var(--card-border);
     border-radius: 14px; padding: 6px;
+    transition: grid-template-columns 0.2s;
   }
+  .tabs.with-config { grid-template-columns: 1fr 1fr 1fr; }
 
   .tab {
     padding: 10px 6px; border: none; background: transparent; color: var(--text-dim);
@@ -51,6 +56,7 @@
   }
 
   .tab.active { background: rgba(59, 130, 246, 0.2); color: var(--text); }
+  .tab.hidden { display: none; }
 
   .card {
     background: var(--card-bg);
@@ -129,24 +135,20 @@
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
   .vehicle-info { flex: 1; min-width: 0; }
-
   .vehicle-info .alias {
     font-size: 15px; font-weight: 600;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-
   .vehicle-info .plate {
     font-family: "SF Mono", Monaco, monospace;
     color: var(--text-dim); font-size: 13px;
     letter-spacing: 1px; margin-top: 2px;
   }
-
   .vehicle-info .imei {
     font-family: "SF Mono", Monaco, monospace;
     color: var(--text-dim); font-size: 11px;
     margin-top: 2px; opacity: 0.85;
   }
-
   .vehicle-info .state { font-size: 12px; margin-top: 4px; }
   .vehicle-info .state.active { color: var(--danger); font-weight: 600; }
   .vehicle-info .state.inactive { color: var(--success); font-weight: 600; }
@@ -169,12 +171,10 @@
     background: linear-gradient(135deg, #ef4444, #dc2626);
     box-shadow: 0 8px 16px rgba(239, 68, 68, 0.25);
   }
-
   .btn-deactivate {
     background: linear-gradient(135deg, #10b981, #059669);
     box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25);
   }
-
   .btn-primary {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
@@ -194,7 +194,6 @@
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 12px;
   }
-
   .section-header h2 {
     font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;
     color: var(--text-dim); font-weight: 600;
@@ -237,7 +236,6 @@
     cursor: pointer; padding: 8px; border-radius: 8px;
     box-shadow: none; font-size: 16px; width: auto;
   }
-
   .icon-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); }
   .icon-btn.danger:hover { color: var(--danger); }
 
@@ -251,7 +249,6 @@
     border-radius: 12px; max-height: 240px; overflow-y: auto;
     z-index: 50; box-shadow: var(--shadow); display: none;
   }
-
   .suggestions.show { display: block; }
 
   .suggestion {
@@ -259,7 +256,6 @@
     border-bottom: 1px solid var(--card-border);
     display: flex; flex-direction: column; gap: 2px;
   }
-
   .suggestion:last-child { border-bottom: none; }
   .suggestion:hover { background: rgba(59, 130, 246, 0.1); }
   .suggestion .alias { font-weight: 600; font-size: 14px; }
@@ -279,7 +275,6 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 16px; flex-shrink: 0;
   }
-
   .history-icon.activate { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
   .history-icon.deactivate { background: rgba(16, 185, 129, 0.15); color: var(--success); }
 
@@ -294,12 +289,10 @@
   }
 
   .badge {
-    display: inline-block;
-    font-size: 9px; font-weight: 700;
+    display: inline-block; font-size: 9px; font-weight: 700;
     padding: 2px 6px; border-radius: 4px;
     margin-left: 6px; vertical-align: middle;
-    letter-spacing: 0.5px;
-    font-family: -apple-system, sans-serif;
+    letter-spacing: 0.5px; font-family: -apple-system, sans-serif;
   }
   .badge.real { background: rgba(16, 185, 129, 0.2); color: var(--success); }
   .badge.sim { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
@@ -312,7 +305,6 @@
     display: none; align-items: center; justify-content: center;
     padding: 24px; z-index: 100;
   }
-
   .modal-backdrop.show { display: flex; }
 
   .modal {
@@ -320,7 +312,6 @@
     border-radius: 20px; padding: 28px;
     max-width: 400px; width: 100%; text-align: center;
   }
-
   .modal-icon { font-size: 48px; margin-bottom: 12px; }
   .modal h3 { font-size: 20px; margin-bottom: 8px; }
   .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 12px; }
@@ -331,7 +322,6 @@
     letter-spacing: 1.5px; background: rgba(0, 0, 0, 0.3);
     padding: 12px; border-radius: 10px; margin: 12px 0;
   }
-
   .modal .imei-display {
     font-family: "SF Mono", Monaco, monospace;
     font-size: 12px; color: var(--text-dim);
@@ -341,11 +331,9 @@
   .modal-buttons {
     display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;
   }
-
   .btn-cancel {
     background: rgba(255, 255, 255, 0.08); color: var(--text); box-shadow: none;
   }
-
   .btn-confirm-activate { background: linear-gradient(135deg, #ef4444, #dc2626); }
   .btn-confirm-deactivate { background: linear-gradient(135deg, #10b981, #059669); }
   .btn-confirm-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
@@ -368,7 +356,6 @@
     transition: transform 0.3s ease; z-index: 200;
     max-width: 90%; text-align: center;
   }
-
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.success { border-color: var(--success); }
   .toast.error { border-color: var(--danger); }
@@ -379,7 +366,6 @@
     padding: 14px; background: rgba(0,0,0,0.2);
     border-radius: 12px; border: 1px solid var(--card-border);
   }
-
   .switch-label { display: flex; flex-direction: column; gap: 2px; flex: 1; }
   .switch-label .t { font-size: 14px; font-weight: 600; }
   .switch-label .d { font-size: 12px; color: var(--text-dim); }
@@ -403,19 +389,24 @@
     border-radius: 12px; padding: 12px;
     font-size: 12px; color: #fca5a5; line-height: 1.5;
   }
+
+  .config-hint {
+    font-size: 11px; color: var(--text-dim);
+    text-align: center; opacity: 0.5; margin-top: -8px;
+  }
 </style>
 </head>
 <body>
   <div class="app">
     <div class="header">
-      <h1>Control de Corta Corriente</h1>
-      <p>Integración Copiloto · GPS Queclink</p>
+      <h1 id="appTitle">Control de Corta Corriente</h1>
+      <p>Gestión de flota</p>
     </div>
 
-    <div class="tabs">
+    <div class="tabs" id="tabs">
       <button class="tab active" data-view="operar">Operar</button>
       <button class="tab" data-view="flota">Mi Flota</button>
-      <button class="tab" data-view="config">Configuración</button>
+      <button class="tab hidden" data-view="config" id="tabConfig">⚙️</button>
     </div>
 
     <!-- OPERAR -->
@@ -480,42 +471,42 @@
       </div>
     </div>
 
-    <!-- CONFIGURACIÓN -->
+    <!-- CONFIGURACIÓN (oculta, solo accesible con 5 toques en el título) -->
     <div class="view" id="view-config">
       <div class="card">
-        <div class="section-header"><h2>API Copiloto</h2></div>
+        <div class="section-header">
+          <h2>Configuración (admin)</h2>
+          <button class="icon-btn" id="btnHideConfig" title="Ocultar">✕</button>
+        </div>
 
         <div class="danger-banner" style="margin-bottom:16px;">
-          ⚠️ El token se guarda en este navegador (localStorage). No uses esta versión en producción ni la compartas públicamente con el token cargado. Para producción, mover las llamadas a un backend propio.
+          ⚠️ Pantalla oculta. Acceso solo para administrador. El token queda guardado en el navegador del dispositivo (localStorage).
         </div>
 
         <div class="input-group">
           <label for="cfgBaseUrl">Base URL</label>
           <input type="text" id="cfgBaseUrl" class="mono" placeholder="https://api.copiloto.ai" />
-          <div class="hint">Sin barra al final</div>
         </div>
 
         <div class="input-group" style="margin-top:14px;">
           <label for="cfgToken">Token Bearer</label>
           <input type="password" id="cfgToken" class="mono" placeholder="Pegá tu token de Copiloto" autocomplete="off" />
-          <div class="hint">Se envía como header: Authorization: Bearer &lt;token&gt;</div>
         </div>
 
         <div class="input-group" style="margin-top:14px;">
-          <label for="cfgCmdOn">Comando para ACTIVAR (cortar corriente)</label>
+          <label for="cfgCmdOn">Comando ACTIVAR (cortar corriente)</label>
           <textarea id="cfgCmdOn" class="mono" rows="3"></textarea>
-          <div class="hint">Se envía en el body: { "command": "..." }</div>
         </div>
 
         <div class="input-group" style="margin-top:14px;">
-          <label for="cfgCmdOff">Comando para DESACTIVAR (restaurar)</label>
+          <label for="cfgCmdOff">Comando DESACTIVAR (restaurar)</label>
           <textarea id="cfgCmdOff" class="mono" rows="3"></textarea>
         </div>
 
         <div class="switch-row" style="margin-top:16px;">
           <div class="switch-label">
             <div class="t">Modo simulación</div>
-            <div class="d">No envía nada a la API. Solo actualiza el estado local.</div>
+            <div class="d">No envía a la API. Solo actualiza el estado local.</div>
           </div>
           <div class="switch" id="cfgSimSwitch"></div>
         </div>
@@ -652,6 +643,45 @@
     setTimeout(() => t.classList.remove('show'), duration);
   };
 
+  // ============ HIDDEN CONFIG ACCESS (5 taps on title) ============
+  const appTitle = document.getElementById('appTitle');
+  const tabConfig = document.getElementById('tabConfig');
+  const tabs = document.getElementById('tabs');
+  let tapCount = 0;
+  let tapTimer = null;
+
+  const showConfigTab = () => {
+    tabConfig.classList.remove('hidden');
+    tabs.classList.add('with-config');
+    showToast('Modo administrador desbloqueado', 'warn', 2000);
+  };
+
+  const hideConfigTab = () => {
+    // Si estás parado en config, volvé a operar
+    if (document.querySelector('.tab[data-view="config"]').classList.contains('active')) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelector('.tab[data-view="operar"]').classList.add('active');
+      document.getElementById('view-operar').classList.add('active');
+    }
+    tabConfig.classList.add('hidden');
+    tabs.classList.remove('with-config');
+    showToast('Configuración oculta', 'success', 1500);
+  };
+
+  appTitle.addEventListener('click', () => {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { tapCount = 0; }, 1500);
+    if (tapCount >= 5) {
+      tapCount = 0;
+      clearTimeout(tapTimer);
+      if (tabConfig.classList.contains('hidden')) showConfigTab();
+    }
+  });
+
+  document.getElementById('btnHideConfig').addEventListener('click', hideConfigTab);
+
   // ============ TABS ============
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -665,7 +695,6 @@
   // ============ API CALL ============
   async function sendCommand(imei, command) {
     if (config.simulate) {
-      // Simulated success (small delay to feel realistic)
       await new Promise(r => setTimeout(r, 400));
       return { ok: true, simulated: true };
     }
@@ -859,7 +888,7 @@
       modeEl.textContent = '⚙️ Modo simulación: no se envía a la API';
       modeEl.className = 'hint warn';
     } else {
-      modeEl.textContent = '📡 Se enviará a ' + config.baseUrl + '/command/' + v.imei;
+      modeEl.textContent = '📡 Enviando comando real al GPS';
       modeEl.className = 'hint';
     }
     openModal('modalAction');
