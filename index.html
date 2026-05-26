@@ -39,14 +39,14 @@
   .header p { color: var(--text-dim); font-size: 13px; margin-top: 4px; }
 
   .tabs {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;
     background: var(--card-bg); border: 1px solid var(--card-border);
     border-radius: 14px; padding: 6px;
   }
 
   .tab {
-    padding: 10px; border: none; background: transparent; color: var(--text-dim);
-    font-size: 14px; font-weight: 600; border-radius: 10px;
+    padding: 10px 6px; border: none; background: transparent; color: var(--text-dim);
+    font-size: 13px; font-weight: 600; border-radius: 10px;
     cursor: pointer; transition: all 0.2s; font-family: inherit;
   }
 
@@ -69,12 +69,13 @@
     text-transform: uppercase; letter-spacing: 0.5px;
   }
 
-  input[type="text"] {
+  input[type="text"], input[type="password"], textarea {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--card-border);
     border-radius: 12px; padding: 14px 16px;
-    color: var(--text); font-size: 16px; font-weight: 500;
+    color: var(--text); font-size: 15px; font-weight: 500;
     transition: all 0.2s; font-family: inherit; width: 100%;
+    resize: vertical;
   }
 
   input[type="text"].plate {
@@ -82,11 +83,11 @@
     text-align: center; font-family: "SF Mono", Monaco, monospace; font-size: 18px;
   }
 
-  input[type="text"].mono {
-    font-family: "SF Mono", Monaco, monospace; letter-spacing: 0.5px; font-size: 15px;
+  input[type="text"].mono, textarea.mono, input[type="password"].mono {
+    font-family: "SF Mono", Monaco, monospace; letter-spacing: 0.3px; font-size: 13px;
   }
 
-  input[type="text"]:focus {
+  input:focus, textarea:focus {
     outline: none; border-color: var(--accent);
     background: rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
@@ -97,9 +98,10 @@
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
   }
 
-  .hint { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .hint { font-size: 12px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
   .hint.error { color: var(--danger); }
   .hint.ok { color: var(--success); }
+  .hint.warn { color: var(--warning); }
 
   .vehicle-card {
     display: flex; align-items: center; gap: 14px;
@@ -178,6 +180,15 @@
     box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25);
     flex-direction: row; width: 100%;
   }
+
+  .btn-loading::after {
+    content: ''; width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block; margin-left: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .section-header {
     display: flex; justify-content: space-between; align-items: center;
@@ -282,6 +293,18 @@
     font-family: "SF Mono", Monaco, monospace;
   }
 
+  .badge {
+    display: inline-block;
+    font-size: 9px; font-weight: 700;
+    padding: 2px 6px; border-radius: 4px;
+    margin-left: 6px; vertical-align: middle;
+    letter-spacing: 0.5px;
+    font-family: -apple-system, sans-serif;
+  }
+  .badge.real { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+  .badge.sim { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+  .badge.err { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
   .modal-backdrop {
     position: fixed; inset: 0;
     background: rgba(0, 0, 0, 0.6);
@@ -295,7 +318,7 @@
   .modal {
     background: #1e293b; border: 1px solid var(--card-border);
     border-radius: 20px; padding: 28px;
-    max-width: 380px; width: 100%; text-align: center;
+    max-width: 400px; width: 100%; text-align: center;
   }
 
   .modal-icon { font-size: 48px; margin-bottom: 12px; }
@@ -338,7 +361,7 @@
 
   .toast {
     position: fixed; bottom: 24px; left: 50%;
-    transform: translateX(-50%) translateY(100px);
+    transform: translateX(-50%) translateY(120px);
     background: #1e293b; border: 1px solid var(--card-border);
     border-radius: 12px; padding: 14px 20px; box-shadow: var(--shadow);
     font-size: 14px; font-weight: 500;
@@ -349,20 +372,53 @@
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.success { border-color: var(--success); }
   .toast.error { border-color: var(--danger); }
+  .toast.warn { border-color: var(--warning); }
+
+  .switch-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px; background: rgba(0,0,0,0.2);
+    border-radius: 12px; border: 1px solid var(--card-border);
+  }
+
+  .switch-label { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .switch-label .t { font-size: 14px; font-weight: 600; }
+  .switch-label .d { font-size: 12px; color: var(--text-dim); }
+
+  .switch {
+    position: relative; width: 44px; height: 26px;
+    background: rgba(255,255,255,0.1); border-radius: 13px;
+    cursor: pointer; transition: 0.2s; flex-shrink: 0;
+  }
+  .switch::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 20px; height: 20px; background: var(--text);
+    border-radius: 50%; transition: 0.2s;
+  }
+  .switch.on { background: var(--accent); }
+  .switch.on::after { transform: translateX(18px); }
+
+  .danger-banner {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 12px; padding: 12px;
+    font-size: 12px; color: #fca5a5; line-height: 1.5;
+  }
 </style>
 </head>
 <body>
   <div class="app">
     <div class="header">
       <h1>Control de Corta Corriente</h1>
-      <p>Gestión de flota</p>
+      <p>Integración Copiloto · GPS Queclink</p>
     </div>
 
     <div class="tabs">
       <button class="tab active" data-view="operar">Operar</button>
       <button class="tab" data-view="flota">Mi Flota</button>
+      <button class="tab" data-view="config">Configuración</button>
     </div>
 
+    <!-- OPERAR -->
     <div class="view active" id="view-operar">
       <div class="card">
         <div class="input-group">
@@ -407,6 +463,7 @@
       </div>
     </div>
 
+    <!-- FLOTA -->
     <div class="view" id="view-flota">
       <div class="card">
         <div class="section-header">
@@ -422,8 +479,59 @@
         </div>
       </div>
     </div>
+
+    <!-- CONFIGURACIÓN -->
+    <div class="view" id="view-config">
+      <div class="card">
+        <div class="section-header"><h2>API Copiloto</h2></div>
+
+        <div class="danger-banner" style="margin-bottom:16px;">
+          ⚠️ El token se guarda en este navegador (localStorage). No uses esta versión en producción ni la compartas públicamente con el token cargado. Para producción, mover las llamadas a un backend propio.
+        </div>
+
+        <div class="input-group">
+          <label for="cfgBaseUrl">Base URL</label>
+          <input type="text" id="cfgBaseUrl" class="mono" placeholder="https://api.copiloto.ai" />
+          <div class="hint">Sin barra al final</div>
+        </div>
+
+        <div class="input-group" style="margin-top:14px;">
+          <label for="cfgToken">Token Bearer</label>
+          <input type="password" id="cfgToken" class="mono" placeholder="Pegá tu token de Copiloto" autocomplete="off" />
+          <div class="hint">Se envía como header: Authorization: Bearer &lt;token&gt;</div>
+        </div>
+
+        <div class="input-group" style="margin-top:14px;">
+          <label for="cfgCmdOn">Comando para ACTIVAR (cortar corriente)</label>
+          <textarea id="cfgCmdOn" class="mono" rows="3"></textarea>
+          <div class="hint">Se envía en el body: { "command": "..." }</div>
+        </div>
+
+        <div class="input-group" style="margin-top:14px;">
+          <label for="cfgCmdOff">Comando para DESACTIVAR (restaurar)</label>
+          <textarea id="cfgCmdOff" class="mono" rows="3"></textarea>
+        </div>
+
+        <div class="switch-row" style="margin-top:16px;">
+          <div class="switch-label">
+            <div class="t">Modo simulación</div>
+            <div class="d">No envía nada a la API. Solo actualiza el estado local.</div>
+          </div>
+          <div class="switch" id="cfgSimSwitch"></div>
+        </div>
+
+        <button class="btn-primary" id="btnSaveConfig" style="margin-top:16px; padding:14px;">
+          <span>Guardar configuración</span>
+        </button>
+
+        <button class="btn-primary" id="btnTestConnection" style="margin-top:10px; padding:12px; background: rgba(255,255,255,0.08); box-shadow:none;">
+          <span>Probar conexión</span>
+        </button>
+      </div>
+    </div>
   </div>
 
+  <!-- Modals -->
   <div class="modal-backdrop" id="modalAction">
     <div class="modal">
       <div class="modal-icon" id="actionIcon">⚠️</div>
@@ -431,6 +539,7 @@
       <p id="actionText"></p>
       <div class="plate-display" id="actionPlate">—</div>
       <div class="imei-display" id="actionImei"></div>
+      <div class="hint" id="actionMode" style="margin-bottom:8px;"></div>
       <div class="modal-buttons">
         <button class="btn-cancel" data-close="modalAction">Cancelar</button>
         <button id="btnConfirmAction">Confirmar</button>
@@ -455,7 +564,7 @@
         <div>
           <label for="vehicleImei">IMEI del GPS</label>
           <input type="text" id="vehicleImei" class="mono" inputmode="numeric" placeholder="Ej: 860123456789012" maxlength="17" style="margin-top:4px;" />
-          <div class="hint" id="vehicleImeiHint" style="margin-top:6px;">15 dígitos (algunos equipos: 14 a 17). Es la clave para enviar comandos.</div>
+          <div class="hint" id="vehicleImeiHint" style="margin-top:6px;">15 dígitos (algunos equipos: 14 a 17). Clave para enviar comandos.</div>
         </div>
       </div>
       <div class="modal-buttons">
@@ -481,32 +590,38 @@
   <div class="toast" id="toast"></div>
 
 <script>
+  // ============ STORAGE KEYS ============
   const K_FLEET = 'cc_fleet_v3';
   const K_HISTORY = 'cc_history_v3';
+  const K_CONFIG = 'cc_config_v1';
 
-  // Formatos de patente soportados (LATAM)
+  // ============ DEFAULTS ============
+  const DEFAULT_CONFIG = {
+    baseUrl: 'https://api.copiloto.ai',
+    token: '',
+    cmdOn:  'AT+GTDOS=gv58lau,0,3,1,1,0,0,0,,2,0,0,0,0,,3,0,0,0,0,,7,0,5,,,,FFFF$',
+    cmdOff: 'AT+GTDOS=gv58lau,0,3,1,0,0,0,0,,2,0,0,0,0,,3,0,0,0,0,,7,0,5,,,,FFFF$',
+    simulate: true
+  };
+
+  // ============ VALIDATIONS ============
   const PLATE_FORMATS = [
-    /^[A-Z]{2}\d{3}[A-Z]{2}$/,   // AR Mercosur auto: AB123CD
-    /^[A-Z]\d{3}[A-Z]{3}$/,      // AR Mercosur moto: A123BCD
-    /^[A-Z]{3}\d{3}$/,           // AR antigua auto: ABC123
-    /^\d{3}[A-Z]{3}$/,           // AR antigua moto: 123ABC
-    /^[A-Z]{4}\d{2}$/,           // Chile: VRXT53
-    /^[A-Z]{3}\d{4}$/,           // Uruguay / BR antigua: ABC1234
-    /^[A-Z]{3}\d[A-Z]\d{2}$/,    // Brasil Mercosur: ABC1D23
-    /^[A-Z]{4}\d{3}$/,           // Paraguay: AABB123
+    /^[A-Z]{2}\d{3}[A-Z]{2}$/, /^[A-Z]\d{3}[A-Z]{3}$/,
+    /^[A-Z]{3}\d{3}$/, /^\d{3}[A-Z]{3}$/,
+    /^[A-Z]{4}\d{2}$/, /^[A-Z]{3}\d{4}$/,
+    /^[A-Z]{3}\d[A-Z]\d{2}$/, /^[A-Z]{4}\d{3}$/,
   ];
   const GENERIC = /^(?=.*[A-Z])(?=.*\d)[A-Z0-9]{5,8}$/;
   const isValidPlate = (p) => PLATE_FORMATS.some(r => r.test(p)) || GENERIC.test(p);
-
-  // IMEI: 14 a 17 dígitos numéricos (15 es el estándar; algunos GPS usan otros largos)
   const isValidImei = (i) => /^\d{14,17}$/.test(i);
 
-  // Storage
+  // ============ STORAGE ============
   const load = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } };
   const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-  let fleet = load(K_FLEET, []);     // [{ plate, alias, imei, active, updated }]
-  let history = load(K_HISTORY, []); // [{ plate, alias, imei, action, ts }]
+  let fleet = load(K_FLEET, []);
+  let history = load(K_HISTORY, []);
+  let config = Object.assign({}, DEFAULT_CONFIG, load(K_CONFIG, {}));
   let selectedPlate = null;
   let editingPlate = null;
   let pendingDeletePlate = null;
@@ -514,18 +629,13 @@
 
   const saveFleet = () => save(K_FLEET, fleet);
   const saveHistory = () => save(K_HISTORY, history);
+  const saveConfig = () => save(K_CONFIG, config);
 
-  // Tabs
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById('view-' + tab.dataset.view).classList.add('active');
-    });
-  });
+  // ============ HELPERS ============
+  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const findVehicle = (plate) => fleet.find(v => v.plate === plate);
+  const findByImei = (imei) => fleet.find(v => v.imei === imei);
 
-  // Helpers
   const formatTime = (ts) => {
     const d = new Date(ts);
     const today = new Date();
@@ -535,18 +645,57 @@
     return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit' }) + ' ' + time;
   };
 
-  const showToast = (msg, type = 'success') => {
+  const showToast = (msg, type = 'success', duration = 2800) => {
     const t = document.getElementById('toast');
     t.className = 'toast ' + type + ' show';
     t.textContent = msg;
-    setTimeout(() => t.classList.remove('show'), 2800);
+    setTimeout(() => t.classList.remove('show'), duration);
   };
 
-  const findVehicle = (plate) => fleet.find(v => v.plate === plate);
-  const findByImei = (imei) => fleet.find(v => v.imei === imei);
-  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // ============ TABS ============
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('view-' + tab.dataset.view).classList.add('active');
+    });
+  });
 
-  // Render fleet
+  // ============ API CALL ============
+  async function sendCommand(imei, command) {
+    if (config.simulate) {
+      // Simulated success (small delay to feel realistic)
+      await new Promise(r => setTimeout(r, 400));
+      return { ok: true, simulated: true };
+    }
+    if (!config.token) return { ok: false, error: 'Falta el token en Configuración' };
+    if (!config.baseUrl) return { ok: false, error: 'Falta la URL base en Configuración' };
+
+    const url = `${config.baseUrl.replace(/\/$/, '')}/command/${encodeURIComponent(imei)}`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${config.token}`
+        },
+        body: JSON.stringify({ command })
+      });
+      if (!res.ok) {
+        let detail = '';
+        try { detail = (await res.text()).slice(0, 200); } catch {}
+        return { ok: false, error: `HTTP ${res.status} ${res.statusText}${detail ? ' · ' + detail : ''}` };
+      }
+      let data = null;
+      try { data = await res.json(); } catch {}
+      return { ok: true, data };
+    } catch (e) {
+      return { ok: false, error: 'Error de red o CORS: ' + e.message };
+    }
+  }
+
+  // ============ RENDER FLEET ============
   const renderFleet = () => {
     document.getElementById('fleetCount').textContent = fleet.length;
     const list = document.getElementById('fleetList');
@@ -569,25 +718,34 @@
     `).join('');
   };
 
-  // Render history
+  // ============ RENDER HISTORY ============
   const renderHistory = () => {
     const list = document.getElementById('historyList');
     if (history.length === 0) {
       list.innerHTML = '<div class="empty">Aún no hay acciones registradas</div>';
       return;
     }
-    list.innerHTML = history.map(h => `
-      <div class="history-item">
-        <div class="history-icon ${h.action}">${h.action === 'activate' ? '🔒' : '🔓'}</div>
-        <div class="history-info">
-          <div class="alias">${escapeHtml(h.alias)} ${h.action === 'activate' ? '— Activado' : '— Desactivado'}</div>
-          <div class="meta">${escapeHtml(h.plate)} · IMEI ${escapeHtml(h.imei || '—')} · ${formatTime(h.ts)}</div>
+    list.innerHTML = history.map(h => {
+      const badge = h.status === 'real'
+        ? '<span class="badge real">API</span>'
+        : h.status === 'sim'
+          ? '<span class="badge sim">SIM</span>'
+          : '<span class="badge err">ERR</span>';
+      const errText = h.status === 'err' && h.error ? `<div class="meta" style="color:var(--danger);">${escapeHtml(h.error)}</div>` : '';
+      return `
+        <div class="history-item">
+          <div class="history-icon ${h.action}">${h.action === 'activate' ? '🔒' : '🔓'}</div>
+          <div class="history-info">
+            <div class="alias">${escapeHtml(h.alias)} ${h.action === 'activate' ? '— Activado' : '— Desactivado'}${badge}</div>
+            <div class="meta">${escapeHtml(h.plate)} · IMEI ${escapeHtml(h.imei || '—')} · ${formatTime(h.ts)}</div>
+            ${errText}
+          </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   };
 
-  // Operar
+  // ============ OPERAR VIEW ============
   const searchInput = document.getElementById('search');
   const suggestions = document.getElementById('suggestions');
   const selectedAlias = document.getElementById('selectedAlias');
@@ -602,11 +760,7 @@
     const q = searchInput.value.trim().toUpperCase();
     if (q.length === 0) { suggestions.classList.remove('show'); return; }
     const matches = fleet
-      .filter(v =>
-        v.plate.includes(q) ||
-        v.alias.toUpperCase().includes(q) ||
-        (v.imei && v.imei.includes(q))
-      )
+      .filter(v => v.plate.includes(q) || v.alias.toUpperCase().includes(q) || (v.imei && v.imei.includes(q)))
       .slice(0, 8);
     if (matches.length === 0) {
       suggestions.innerHTML = '<div class="suggestion"><div class="alias" style="color:var(--text-dim);font-weight:400;">Sin resultados</div></div>';
@@ -672,7 +826,7 @@
     if (item && item.dataset.plate) selectVehicle(item.dataset.plate);
   });
 
-  // Action modal
+  // ============ ACTION MODAL ============
   const openActionModal = (action) => {
     if (!selectedPlate) return;
     const v = findVehicle(selectedPlate);
@@ -683,7 +837,9 @@
     const text = document.getElementById('actionText');
     const plateEl = document.getElementById('actionPlate');
     const imeiEl = document.getElementById('actionImei');
+    const modeEl = document.getElementById('actionMode');
     const btn = document.getElementById('btnConfirmAction');
+
     if (action === 'activate') {
       icon.textContent = '🔒';
       title.textContent = '¿Activar corta corriente?';
@@ -699,40 +855,72 @@
     }
     plateEl.innerHTML = `<div style="font-size:14px;color:var(--text-dim);margin-bottom:4px;">${escapeHtml(v.alias)}</div>${escapeHtml(v.plate)}`;
     imeiEl.textContent = 'IMEI destino: ' + v.imei;
+    if (config.simulate) {
+      modeEl.textContent = '⚙️ Modo simulación: no se envía a la API';
+      modeEl.className = 'hint warn';
+    } else {
+      modeEl.textContent = '📡 Se enviará a ' + config.baseUrl + '/command/' + v.imei;
+      modeEl.className = 'hint';
+    }
     openModal('modalAction');
   };
 
   btnActivate.addEventListener('click', () => openActionModal('activate'));
   btnDeactivate.addEventListener('click', () => openActionModal('deactivate'));
 
-  document.getElementById('btnConfirmAction').addEventListener('click', () => {
+  const btnConfirmAction = document.getElementById('btnConfirmAction');
+  btnConfirmAction.addEventListener('click', async () => {
     if (!pendingAction) return;
     const v = findVehicle(pendingAction.plate);
     if (!v) return;
-    v.active = pendingAction.action === 'activate';
-    v.updated = Date.now();
-    saveFleet();
+
+    const originalText = btnConfirmAction.textContent;
+    btnConfirmAction.disabled = true;
+    btnConfirmAction.classList.add('btn-loading');
+    btnConfirmAction.textContent = 'Enviando...';
+
+    const command = pendingAction.action === 'activate' ? config.cmdOn : config.cmdOff;
+    const result = await sendCommand(v.imei, command);
+
+    btnConfirmAction.disabled = false;
+    btnConfirmAction.classList.remove('btn-loading');
+    btnConfirmAction.textContent = originalText;
+
+    const ts = Date.now();
+    const status = result.ok ? (result.simulated ? 'sim' : 'real') : 'err';
+
     history.unshift({
       plate: v.plate, alias: v.alias, imei: v.imei,
-      action: pendingAction.action, ts: v.updated
+      action: pendingAction.action, ts, status,
+      error: result.ok ? null : result.error
     });
     history = history.slice(0, 50);
     saveHistory();
-    closeModal('modalAction');
-    selectVehicle(pendingAction.plate);
-    renderHistory();
-    renderFleet();
-    showToast(
-      pendingAction.action === 'activate'
-        ? `Corta corriente ACTIVADO en ${v.alias}`
-        : `Corta corriente DESACTIVADO en ${v.alias}`
-    );
-    // Acá iría la llamada a la API real, ejemplo:
-    // fetch('/api/gps/command', { method:'POST', body: JSON.stringify({ imei: v.imei, cmd: pendingAction.action }) });
+
+    if (result.ok) {
+      v.active = pendingAction.action === 'activate';
+      v.updated = ts;
+      saveFleet();
+      closeModal('modalAction');
+      selectVehicle(pendingAction.plate);
+      renderFleet();
+      renderHistory();
+      const verb = pendingAction.action === 'activate' ? 'ACTIVADO' : 'DESACTIVADO';
+      showToast(
+        result.simulated
+          ? `[Simulado] Corta corriente ${verb} en ${v.alias}`
+          : `Corta corriente ${verb} en ${v.alias}`,
+        result.simulated ? 'warn' : 'success'
+      );
+    } else {
+      renderHistory();
+      showToast('Error: ' + result.error, 'error', 5000);
+    }
+
     pendingAction = null;
   });
 
-  // Vehicle modal
+  // ============ VEHICLE MODAL ============
   const aliasInput = document.getElementById('vehicleAlias');
   const plateInput = document.getElementById('vehiclePlate');
   const plateHint = document.getElementById('vehiclePlateHint');
@@ -761,7 +949,7 @@
     const i = e.target.value;
     imeiInput.classList.remove('invalid');
     if (i.length === 0) {
-      imeiHint.textContent = '15 dígitos (algunos equipos: 14 a 17). Es la clave para enviar comandos.';
+      imeiHint.textContent = '15 dígitos (algunos equipos: 14 a 17). Clave para enviar comandos.';
       imeiHint.className = 'hint';
     } else if (isValidImei(i)) {
       imeiHint.textContent = 'IMEI válido (' + i.length + ' dígitos)';
@@ -776,13 +964,11 @@
   document.getElementById('btnAddVehicle').addEventListener('click', () => {
     editingPlate = null;
     document.getElementById('vehicleModalTitle').textContent = 'Agregar vehículo';
-    aliasInput.value = '';
-    plateInput.value = '';
-    imeiInput.value = '';
+    aliasInput.value = ''; plateInput.value = ''; imeiInput.value = '';
     plateInput.disabled = false;
     plateHint.textContent = 'Acepta formatos AR, CL, UY, BR, PY y similares';
     plateHint.className = 'hint';
-    imeiHint.textContent = '15 dígitos (algunos equipos: 14 a 17). Es la clave para enviar comandos.';
+    imeiHint.textContent = '15 dígitos (algunos equipos: 14 a 17). Clave para enviar comandos.';
     imeiHint.className = 'hint';
     openModal('modalVehicle');
     setTimeout(() => aliasInput.focus(), 100);
@@ -797,9 +983,7 @@
       if (!v) return;
       editingPlate = plate;
       document.getElementById('vehicleModalTitle').textContent = 'Editar vehículo';
-      aliasInput.value = v.alias;
-      plateInput.value = v.plate;
-      imeiInput.value = v.imei;
+      aliasInput.value = v.alias; plateInput.value = v.plate; imeiInput.value = v.imei;
       plateInput.disabled = true;
       plateHint.textContent = 'La patente no se puede modificar';
       plateHint.className = 'hint';
@@ -824,24 +1008,19 @@
     if (!alias) { showToast('Ingresá un alias', 'error'); aliasInput.focus(); return; }
     if (!isValidPlate(plate)) { showToast('Patente inválida', 'error'); plateInput.focus(); return; }
     if (!isValidImei(imei)) { showToast('IMEI inválido (14 a 17 dígitos)', 'error'); imeiInput.focus(); return; }
-
-    // Chequear IMEI duplicado (excepto si es el mismo vehículo en edición)
     const dupImei = findByImei(imei);
     if (dupImei && dupImei.plate !== editingPlate) {
       showToast(`Ese IMEI ya está asignado a ${dupImei.alias} (${dupImei.plate})`, 'error');
       return;
     }
-
     if (editingPlate) {
       const v = findVehicle(editingPlate);
       if (v) { v.alias = alias; v.imei = imei; }
-      saveFleet();
-      showToast('Vehículo actualizado');
+      saveFleet(); showToast('Vehículo actualizado');
     } else {
       if (findVehicle(plate)) { showToast('Esa patente ya está cargada', 'error'); return; }
       fleet.push({ plate, alias, imei, active: false, updated: null });
-      saveFleet();
-      showToast('Vehículo agregado');
+      saveFleet(); showToast('Vehículo agregado');
     }
     renderFleet();
     closeModal('modalVehicle');
@@ -852,14 +1031,67 @@
     if (!pendingDeletePlate) return;
     fleet = fleet.filter(v => v.plate !== pendingDeletePlate);
     if (selectedPlate === pendingDeletePlate) clearSelection();
-    saveFleet();
-    renderFleet();
+    saveFleet(); renderFleet();
     closeModal('modalDelete');
     showToast('Vehículo eliminado');
     pendingDeletePlate = null;
   });
 
-  // Modal helpers
+  // ============ CONFIG VIEW ============
+  const cfgBaseUrl = document.getElementById('cfgBaseUrl');
+  const cfgToken = document.getElementById('cfgToken');
+  const cfgCmdOn = document.getElementById('cfgCmdOn');
+  const cfgCmdOff = document.getElementById('cfgCmdOff');
+  const cfgSimSwitch = document.getElementById('cfgSimSwitch');
+
+  const loadConfigToUI = () => {
+    cfgBaseUrl.value = config.baseUrl;
+    cfgToken.value = config.token;
+    cfgCmdOn.value = config.cmdOn;
+    cfgCmdOff.value = config.cmdOff;
+    cfgSimSwitch.classList.toggle('on', config.simulate);
+  };
+
+  cfgSimSwitch.addEventListener('click', () => {
+    cfgSimSwitch.classList.toggle('on');
+  });
+
+  document.getElementById('btnSaveConfig').addEventListener('click', () => {
+    config.baseUrl = cfgBaseUrl.value.trim();
+    config.token = cfgToken.value.trim();
+    config.cmdOn = cfgCmdOn.value.trim();
+    config.cmdOff = cfgCmdOff.value.trim();
+    config.simulate = cfgSimSwitch.classList.contains('on');
+    saveConfig();
+    showToast('Configuración guardada');
+  });
+
+  document.getElementById('btnTestConnection').addEventListener('click', async () => {
+    const baseUrl = cfgBaseUrl.value.trim();
+    const token = cfgToken.value.trim();
+    if (!baseUrl || !token) { showToast('Falta URL o token', 'error'); return; }
+    showToast('Probando conexión...', 'warn', 1500);
+    try {
+      const res = await fetch(baseUrl.replace(/\/$/,'') + '/command/000000000000000', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ command: 'TEST' })
+      });
+      if (res.status === 401 || res.status === 403) {
+        showToast('Token inválido (HTTP ' + res.status + ')', 'error', 4000);
+      } else if (res.status === 404) {
+        showToast('Conexión OK (404 esperado por IMEI ficticio)', 'success', 4000);
+      } else if (res.ok) {
+        showToast('Conexión OK (HTTP ' + res.status + ')', 'success', 4000);
+      } else {
+        showToast('Respuesta HTTP ' + res.status, 'warn', 4000);
+      }
+    } catch (e) {
+      showToast('Error de red o CORS: ' + e.message, 'error', 5000);
+    }
+  });
+
+  // ============ MODAL HELPERS ============
   const openModal = (id) => document.getElementById(id).classList.add('show');
   const closeModal = (id) => document.getElementById(id).classList.remove('show');
 
@@ -884,7 +1116,8 @@
     }
   });
 
-  // Init
+  // ============ INIT ============
+  loadConfigToUI();
   renderFleet();
   renderHistory();
   clearSelection();
